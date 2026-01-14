@@ -1,0 +1,17 @@
+
+body {
+    background-color: white;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
+}
+
+/* 実行結果を表示する枠 */
+.terminal-screen {
+    background-color: #000;
+    color: #FF0461; 
+    padding: 15px;
+    border-radius: 5px;
+    min-height: 200px;
+    white-space: pre-wrap; /* 改行をそのまま表示する設定 */
+}

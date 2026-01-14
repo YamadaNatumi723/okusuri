@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>お薬チェッカー</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .input-group { margin-bottom: 20px; }
+        input { padding: 8px; width: 200px; }
+        button { padding: 8px 15px; cursor: pointer; }
+        ul { list-style: none; padding: 0; }
+        li { background: #f4f4f4; margin: 5px 0; padding: 10px; border-radius: 4px; display: flex; align-items: center; }
+        input[type="checkbox"] { margin-right: 10px; width: auto; }
+    </style>
+</head>
+<body>
+    <h1>お薬チェッカー </h1>
+    
+    <div class="input-group">
+        <input type="text" id="med-name" placeholder="薬の名前を入力...">
+        <button id="add-btn">保存</button>
+    </div>
+
+    <ul id="med-list">
+        </ul>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
