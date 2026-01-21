@@ -2,27 +2,59 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';">
     <title>お薬チェッカー</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; }
+        body { font-family: sans-serif; padding: 20px; background: #f0f2f5; }
+        
+        /* タブボタンのスタイル */
+        .tab-menu { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { padding: 10px 20px; cursor: pointer; border: none; background: #ddd; border-radius: 5px; }
+        .tab-btn.active { background: #007bff; color: white; }
+
+        /* 各コンテンツの表示・非表示 */
+        .tab-content { display: none; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .tab-content.active { display: block; }
+
         .input-group { margin-bottom: 20px; }
         input { padding: 8px; width: 200px; }
         button { padding: 8px 15px; cursor: pointer; }
         ul { list-style: none; padding: 0; }
-        li { background: #f4f4f4; margin: 5px 0; padding: 10px; border-radius: 4px; display: flex; align-items: center; }
-        input[type="checkbox"] { margin-right: 10px; width: auto; }
+        li { background: #f8f9fa; margin: 5px 0; padding: 12px; border-radius: 4px; display: flex; align-items: center; border: 1px solid #eee; }
+        input[type="checkbox"] { margin-right: 15px; transform: scale(1.5); }
+        .delete-btn { margin-left: auto; background: #ff4d4d; color: white; border: none; border-radius: 3px; padding: 5px 10px; }
+        
+        #current-date { font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; color: #333; }
     </style>
 </head>
 <body>
-    <h1>お薬チェッカー </h1>
-    
-    <div class="input-group">
-        <input type="text" id="med-name" placeholder="薬の名前を入力...">
-        <button id="add-btn">保存</button>
+    <h1>お薬チェッカー</h1>
+
+    <div class="tab-menu">
+        <button class="tab-btn active" data-tab="check-tab">今日のチェック</button>
+        <button class="tab-btn" data-tab="manage-tab">薬の管理</button>
+        <button class="tab-btn" data-tab="history-tab">履歴（カレンダー）</button>
+
     </div>
 
-    <ul id="med-list">
-        </ul>
+    <div id="check-tab" class="tab-content active">
+        <div id="current-date"></div> <ul id="daily-check-list">
+            </ul>
+    </div>
+
+    <div id="manage-tab" class="tab-content">
+        <h3>薬の登録・削除</h3>
+        <div class="input-group">
+            <input type="text" id="med-name" placeholder="新しい薬の名前...">
+            <button id="add-btn">保存</button>
+        </div>
+        <ul id="med-list"></ul>
+    </div>
+
+    <div id="history-tab" class="tab-content">
+        <h3>服用履歴</h3>
+        <p>カレンダー機能をここに実装予定です。</p>
+    </div>
 
     <script src="renderer.js"></script>
 </body>
