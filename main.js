@@ -30,11 +30,9 @@ app.whenReady().then(() => {
     );
   `);
 
-  // 2. 服用記録テーブル（日付ごとに保存）
-  // date: '2026-01-15' のような形式
-  // is_taken: 1なら服用済み、0なら未服用
+  // 2. 服用記録テーブル（名前を pill_records に変更してエラーを回避）
   db.run(`
-    CREATE TABLE IF NOT EXISTS records (
+    CREATE TABLE IF NOT EXISTS pill_records (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       date TEXT NOT NULL,
       medicine_name TEXT NOT NULL,
@@ -46,7 +44,7 @@ app.whenReady().then(() => {
   createWindow();
 });
 
-// --- IPC通信ハンドラ（renderer.jsからの命令を受け取る） ---
+// --- IPC通信ハンドラ ---
 
 // 薬を追加する
 ipcMain.handle('add-medicine', (event, name) => {
@@ -69,19 +67,51 @@ ipcMain.handle('get-medicines', () => {
   });
 });
 
-// 薬をマスターから削除する
+// 薬をマスターから削除する（関連記録も削除）
 ipcMain.handle('delete-medicine', (event, name) => {
   return new Promise((resolve, reject) => {
-    // 薬自体を削除
     db.run('DELETE FROM medicines WHERE name = ?', [name], (err) => {
       if (err) reject(err);
       else {
-        // 関連する過去の記録も消す場合
-        db.run('DELETE FROM records WHERE medicine_name = ?', [name], (err2) => {
+        // 新しいテーブル名 pill_records に合わせて削除
+        db.run('DELETE FROM pill_records WHERE medicine_name = ?', [name], (err2) => {
           if (err2) reject(err2);
           else resolve();
         });
       }
+    });
+  });
+});
+
+// 今日の服用記録を保存する
+ipcMain.handle('save-records', async (event, { date, records }) => {
+  return new Promise((resolve, reject) => {
+    // 新しいテーブル名 pill_records に保存
+    const stmt = db.prepare(`
+      INSERT OR REPLACE INTO pill_records (date, medicine_name, is_taken)
+      VALUES (?, ?, ?)
+    `);
+
+    db.serialize(() => {
+      records.forEach(rec => {
+        stmt.run(date, rec.name, rec.is_taken);
+      });
+    });
+
+    stmt.finalize((err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+});
+
+// 特定の日付の記録を取得する
+ipcMain.handle('get-records-by-date', (event, date) => {
+  return new Promise((resolve, reject) => {
+    // 新しいテーブル名 pill_records から取得
+    db.all('SELECT medicine_name, is_taken FROM pill_records WHERE date = ?', [date], (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows);
     });
   });
 });

@@ -6,54 +6,56 @@
     <title>お薬チェッカー</title>
     <style>
         body { font-family: sans-serif; padding: 20px; background: #f0f2f5; }
-        
-        /* タブボタンのスタイル */
-        .tab-menu { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { padding: 10px 20px; cursor: pointer; border: none; background: #ddd; border-radius: 5px; }
+        .tab-menu { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .tab-btn { padding: 10px 20px; cursor: pointer; border: none; background: #ddd; border-radius: 5px; font-weight: bold; }
         .tab-btn.active { background: #007bff; color: white; }
 
-        /* 各コンテンツの表示・非表示 */
-        .tab-content { display: none; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .tab-content { display: none; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; }
         .tab-content.active { display: block; }
 
-        .input-group { margin-bottom: 20px; }
-        input { padding: 8px; width: 200px; }
+        .input-group { margin-bottom: 20px; display: flex; gap: 10px; }
+        input { padding: 8px; flex: 1; }
         button { padding: 8px 15px; cursor: pointer; }
+        
         ul { list-style: none; padding: 0; }
         li { background: #f8f9fa; margin: 5px 0; padding: 12px; border-radius: 4px; display: flex; align-items: center; border: 1px solid #eee; }
         input[type="checkbox"] { margin-right: 15px; transform: scale(1.5); }
-        .delete-btn { margin-left: auto; background: #ff4d4d; color: white; border: none; border-radius: 3px; padding: 5px 10px; }
+        .med-name { flex: 1; font-size: 1.1rem; }
+        .delete-btn { background: #ff4d4d; color: white; border: none; border-radius: 3px; padding: 5px 10px; }
         
-        #current-date { font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; color: #333; }
+        #current-date { font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; color: #333; text-align: center; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        #save-daily-btn { background: #28a745; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; width: 100%; font-size: 1.1rem; }
     </style>
 </head>
 <body>
     <h1>お薬チェッカー</h1>
 
     <div class="tab-menu">
-        <button class="tab-btn active" data-tab="check-tab">今日のチェック</button>
-        <button class="tab-btn" data-tab="manage-tab">薬の管理</button>
-        <button class="tab-btn" data-tab="history-tab">履歴（カレンダー）</button>
-
+      <button class="tab-btn active" data-tab="check-tab">今日のチェック</button>
+<button class="tab-btn" data-tab="manage-tab">薬の管理</button>
+<button class="tab-btn" data-tab="history-tab">履歴</button>
     </div>
 
     <div id="check-tab" class="tab-content active">
-        <div id="current-date"></div> <ul id="daily-check-list">
-            </ul>
+        <div id="current-date">日付を取得中...</div>
+        <ul id="daily-check-list"></ul>
+        <div style="margin-top: 20px;">
+            <button id="save-daily-btn">今日の記録を保存</button>
+        </div>
     </div>
 
     <div id="manage-tab" class="tab-content">
         <h3>薬の登録・削除</h3>
         <div class="input-group">
             <input type="text" id="med-name" placeholder="新しい薬の名前...">
-            <button id="add-btn">保存</button>
+            <button id="add-btn" style="background: #007bff; color: white; border: none; border-radius: 4px;">登録</button>
         </div>
         <ul id="med-list"></ul>
     </div>
 
     <div id="history-tab" class="tab-content">
         <h3>服用履歴</h3>
-        <p>カレンダー機能をここに実装予定です。</p>
+        <p>カレンダー機能実装予定地</p>
     </div>
 
     <script src="renderer.js"></script>
