@@ -8,9 +8,9 @@ contextBridge.exposeInMainWorld('dbOp', {
   getMedicines: () => ipcRenderer.invoke('get-medicines'),
 
   // 薬をマスターデータから削除する
-  deleteMedicine: (name) => ipcRenderer.invoke('delete-medicine', name), // ←ここにコンマが必要！
-  
+  deleteMedicine: (name) => ipcRenderer.invoke('delete-medicine', name),
+
   // --- 追記 ---
-  saveRecords: (data) => ipcRenderer.invoke('save-records', data), // ←ここにコンマが必要！
+  saveRecords: (data) => ipcRenderer.invoke('save-records', data),
   getRecordsByDate: (date) => ipcRenderer.invoke('get-records-by-date', date)
 });

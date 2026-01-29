@@ -30,7 +30,7 @@ app.whenReady().then(() => {
     );
   `);
 
-  // 2. 服用記録テーブル（名前を pill_records に変更してエラーを回避）
+  // 2. 服用記録テーブル
   db.run(`
     CREATE TABLE IF NOT EXISTS pill_records (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,9 +50,10 @@ app.whenReady().then(() => {
 ipcMain.handle('add-medicine', (event, name) => {
   return new Promise((resolve, reject) => {
     const sql = `INSERT OR IGNORE INTO medicines (name) VALUES (?)`;
-    db.run(sql, [name], function(err) {
+    db.run(sql, [name], function (err) {
       if (err) reject(err);
-      else resolve(this.lastID);
+      else resolve(this.changes
+      );
     });
   });
 });
@@ -67,13 +68,12 @@ ipcMain.handle('get-medicines', () => {
   });
 });
 
-// 薬をマスターから削除する（関連記録も削除）
+// 薬をマスターから削除する
 ipcMain.handle('delete-medicine', (event, name) => {
   return new Promise((resolve, reject) => {
     db.run('DELETE FROM medicines WHERE name = ?', [name], (err) => {
       if (err) reject(err);
       else {
-        // 新しいテーブル名 pill_records に合わせて削除
         db.run('DELETE FROM pill_records WHERE medicine_name = ?', [name], (err2) => {
           if (err2) reject(err2);
           else resolve();
@@ -86,7 +86,7 @@ ipcMain.handle('delete-medicine', (event, name) => {
 // 今日の服用記録を保存する
 ipcMain.handle('save-records', async (event, { date, records }) => {
   return new Promise((resolve, reject) => {
-    // 新しいテーブル名 pill_records に保存
+    // pill_records に保存
     const stmt = db.prepare(`
       INSERT OR REPLACE INTO pill_records (date, medicine_name, is_taken)
       VALUES (?, ?, ?)
@@ -108,7 +108,7 @@ ipcMain.handle('save-records', async (event, { date, records }) => {
 // 特定の日付の記録を取得する
 ipcMain.handle('get-records-by-date', (event, date) => {
   return new Promise((resolve, reject) => {
-    // 新しいテーブル名 pill_records から取得
+    // pill_records から取得
     db.all('SELECT medicine_name, is_taken FROM pill_records WHERE date = ?', [date], (err, rows) => {
       if (err) reject(err);
       else resolve(rows);
